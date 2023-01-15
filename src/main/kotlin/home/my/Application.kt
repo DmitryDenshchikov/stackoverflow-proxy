@@ -1,7 +1,7 @@
 package home.my
 
+import home.my.dao.DatabaseFactory
 import io.ktor.server.application.*
-import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import home.my.plugins.*
 import io.ktor.client.*
@@ -10,13 +10,24 @@ import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.plugins.contentnegotiation.*
 
-fun main() {
-    embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
-        install(ContentNegotiation) {
-            json()
-        }
-        configureRouting()
-    }.start(wait = true)
+
+fun main(args: Array<String>): Unit = EngineMain.main(args)
+
+fun Application.module() {
+    val dbUser = environment.config.property("ktor.database.username").getString()
+    val dbPass = environment.config.property("ktor.database.password").getString()
+    val jdbcUrl = environment.config.property("ktor.database.url").getString()
+    val driver = environment.config.property("ktor.database.driver").getString()
+
+    DatabaseFactory.init(jdbcUrl, driver, dbUser, dbPass)
+
+    install(ContentNegotiation) {
+        json()
+    }
+    configureRouting()
+
+
+
 }
 
 val httpClient: HttpClient = HttpClient {
