@@ -10,20 +10,7 @@ import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.client.plugins.contentnegotiation.*
 
-class StackOverflowClientImpl : StackOverflowClient {
-
-    override val client: HttpClient = HttpClient {
-        install(Logging) {
-            logger = Logger.DEFAULT
-            level = LogLevel.ALL
-        }
-        install(ContentEncoding) {
-            gzip()
-        }
-        install(ContentNegotiation) {
-            json()
-        }
-    }
+class StackOverflowClientImpl(override val client: HttpClient) : StackOverflowClient {
 
     override suspend fun getQuestionsWithNoAnswers(
         pageSize: Int, order: Order, sort: String, tagged: Collection<String>

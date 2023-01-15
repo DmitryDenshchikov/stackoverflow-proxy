@@ -1,6 +1,7 @@
 package home.my.plugins
 
 import home.my.client.StackOverflowClientImpl
+import home.my.httpClient
 import home.my.model.Order
 import io.ktor.server.routing.*
 import io.ktor.server.application.*
@@ -10,7 +11,7 @@ fun Application.configureRouting() {
 
     routing {
         get("/test") {
-            val stackOverflowClientImpl = StackOverflowClientImpl()
+            val stackOverflowClientImpl = StackOverflowClientImpl(httpClient)
             val stackoverflowResponse =
                 stackOverflowClientImpl.getQuestionsWithNoAnswers(2, Order.ASC, "activity", listOf("java", "spring"))
             call.respond(stackoverflowResponse)
