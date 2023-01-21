@@ -9,7 +9,7 @@ import io.ktor.client.plugins.compression.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.plugins.contentnegotiation.*
-
+import kotlinx.serialization.json.Json
 
 fun main(args: Array<String>): Unit = EngineMain.main(args)
 
@@ -19,15 +19,13 @@ fun Application.module() {
     val jdbcUrl = environment.config.property("ktor.database.url").getString()
     val driver = environment.config.property("ktor.database.driver").getString()
 
-    DatabaseFactory.init(jdbcUrl, driver, dbUser, dbPass)
+    val databaseFactory = DatabaseFactory(jdbcUrl, driver, dbUser, dbPass)
 
     install(ContentNegotiation) {
         json()
     }
-    configureRouting()
 
-
-
+    configureRouting(databaseFactory)
 }
 
 val httpClient: HttpClient = HttpClient {
@@ -42,3 +40,5 @@ val httpClient: HttpClient = HttpClient {
         json()
     }
 }
+
+val json = Json { encodeDefaults = true }
