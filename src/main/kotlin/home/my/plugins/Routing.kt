@@ -1,7 +1,7 @@
 package home.my.plugins
 
 import home.my.client.StackOverflowClientImpl
-import home.my.dao.DatabaseFactory
+import home.my.dao.HistoryDao
 import home.my.httpClient
 import home.my.model.domain.history.History
 import home.my.model.domain.history.Question
@@ -10,11 +10,12 @@ import io.ktor.server.routing.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
+import kotlinx.serialization.json.encodeToJsonElement
 
-fun Application.configureRouting(databaseFactory: DatabaseFactory) {
+fun Application.configureRouting(historyDao: HistoryDao) {
 
     routing {
-        post("/test") {
+        post("/questions/without-answers") {
             val request = call.receive<QuestionsRequest>()
 
             val stackOverflowClientImpl = StackOverflowClientImpl(httpClient)
@@ -22,12 +23,17 @@ fun Application.configureRouting(databaseFactory: DatabaseFactory) {
                 request.pageSize, request.order, request.sort, request.tagged
             )
 
-            stackoverflowResponse.items.asSequence().map { it.title to it.answerCount }.forEach {
-                    val history = History(Question(request), it.first, it.second)
-                    databaseFactory.saveHistoryRequest(history)
-                }
+            with(stackoverflowResponse.items.asSequence()
+                .map { History(Question(request), it.title, it.answerCount) }
+                .toList()) {
+                historyDao.insert(this)
+            }
 
             call.respond(stackoverflowResponse)
+        }
+
+        get("/db/rows") {
+            call.respond(historyDao.getAll())
         }
     }
 

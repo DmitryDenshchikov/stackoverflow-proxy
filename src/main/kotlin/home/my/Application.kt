@@ -1,6 +1,7 @@
 package home.my
 
 import home.my.dao.DatabaseFactory
+import home.my.dao.HistoryDao
 import io.ktor.server.application.*
 import io.ktor.server.netty.*
 import home.my.plugins.*
@@ -20,18 +21,19 @@ fun Application.module() {
     val driver = environment.config.property("ktor.database.driver").getString()
 
     val databaseFactory = DatabaseFactory(jdbcUrl, driver, dbUser, dbPass)
+    val historyDao = HistoryDao(databaseFactory.connection)
 
     install(ContentNegotiation) {
         json()
     }
 
-    configureRouting(databaseFactory)
+    configureRouting(historyDao)
 }
 
 val httpClient: HttpClient = HttpClient {
     install(Logging) {
         logger = Logger.DEFAULT
-        level = LogLevel.ALL
+        level = LogLevel.INFO
     }
     install(ContentEncoding) {
         gzip()

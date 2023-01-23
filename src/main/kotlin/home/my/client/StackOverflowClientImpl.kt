@@ -4,11 +4,7 @@ import home.my.model.Order
 import home.my.model.dto.stackoverflow.StackoverflowResponse
 import io.ktor.client.*
 import io.ktor.client.call.*
-import io.ktor.client.plugins.compression.*
-import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
-import io.ktor.serialization.kotlinx.json.*
-import io.ktor.client.plugins.contentnegotiation.*
 
 class StackOverflowClientImpl(override val client: HttpClient) : StackOverflowClient {
 
