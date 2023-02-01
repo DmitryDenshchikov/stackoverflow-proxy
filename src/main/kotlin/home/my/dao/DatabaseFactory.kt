@@ -1,9 +1,11 @@
 package home.my.dao
 
+import home.my.model.dto.database.DatabaseProperties
 import org.jetbrains.exposed.sql.*
 
-class DatabaseFactory(jdbcUrl: String, driver: String, dbUser: String, dbPass: String) {
-    val connection: Database = Database.connect(jdbcUrl, driver, user = dbUser, password = dbPass)
+class DatabaseFactory(props: DatabaseProperties) {
+    val connection: Database =
+        Database.connect(props.jdbcUrl, props.driver, user = props.username, password = props.password)
 }
 
 fun <T : Any> Table.jsonb(name: String, toJson: (T) -> String, toObj: (String) -> T): Column<T> =

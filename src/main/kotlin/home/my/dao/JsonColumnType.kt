@@ -4,7 +4,9 @@ import org.jetbrains.exposed.sql.ColumnType
 import org.jetbrains.exposed.sql.statements.api.PreparedStatementApi
 import org.postgresql.util.PGobject
 
-class JsonColumnType<T : Any>(private val toJson: (T) -> String, private val toObj: (String) -> T) : ColumnType() {
+class JsonColumnType<T : Any>(
+    private val toJson: (T) -> String, private val toObj: (String) -> T
+) : ColumnType() {
     override fun sqlType(): String = "jsonb"
 
     override fun setParameter(stmt: PreparedStatementApi, index: Int, value: Any?) {

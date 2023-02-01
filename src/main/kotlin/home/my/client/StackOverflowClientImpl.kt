@@ -1,23 +1,30 @@
 package home.my.client
 
 import home.my.model.Order
+import home.my.model.dto.stackoverflow.StackOverflowProperties
 import home.my.model.dto.stackoverflow.StackoverflowResponse
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
+import io.ktor.http.*
 
-class StackOverflowClientImpl(override val client: HttpClient) : StackOverflowClient {
+class StackOverflowClientImpl(
+    private val props: StackOverflowProperties, private val client: HttpClient
+) : StackOverflowClient {
 
     override suspend fun getQuestionsWithNoAnswers(
         pageSize: Int, order: Order, sort: String, tagged: Collection<String>
-    ): StackoverflowResponse {
-        return client.get(
-            "https://api.stackexchange.com/2.3/questions/no-answers?pagesize=${pageSize}&order=${order}&sort=${sort}&tagged=${
-                tagged.joinToString(
-                    separator = ";"
-                )
-            }&site=stackoverflow"
-        ).body()
-    }
+    ): StackoverflowResponse = client.get(props.host) {
+        url {
+            path("/2.3/questions/no-answers")
+            with(parameters) {
+                append("pagesize", pageSize.toString())
+                append("order", order.name)
+                append("sort", sort)
+                append("tagged", tagged.joinToString(separator = ";"))
+                append("site", props.site)
+            }
+        }
+    }.body()
 
 }
