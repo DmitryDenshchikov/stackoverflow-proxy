@@ -1,1 +1,1 @@
-rootProject.name = "home.my.stackoverflow-connector"
+rootProject.name = "home.my.stackoverflow-proxy"
