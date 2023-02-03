@@ -29,8 +29,12 @@ fun Application.configureRouting(historyDao: HistoryDao, stackOverflowClient: St
             call.respond(stackoverflowResponse)
         }
 
-        get("/db/rows") {
-            call.respond(historyDao.getAll())
+        post("/questions/get-by-ids") {
+            val request = call.receive<QuestionsRequest>()
+
+            val stackoverflowResponse = stackOverflowClient.getQuestionsByIds(request.ids)
+
+            call.respond(stackoverflowResponse)
         }
     }
 

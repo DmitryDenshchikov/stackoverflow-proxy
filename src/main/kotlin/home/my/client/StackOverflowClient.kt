@@ -9,5 +9,9 @@ interface StackOverflowClient : Client {
         pageSize: Int, order: Order, sort: String, tagged: Collection<String>
     ): StackoverflowResponse
 
+    suspend fun getQuestionsByIds(
+        ids: Collection<String>
+    ): StackoverflowResponse
+
 }
 
