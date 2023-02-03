@@ -1,20 +1,18 @@
 package home.my.model.domain.history
 
 import home.my.dao.jsonb
-import home.my.json
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.JsonElement
 import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.javatime.timestamp
 
 @Serializable
-data class History(val request: Question, val question: String, val numOfAnswers: Int) {}
+data class History(val request: JsonElement, val response: JsonElement, val time: Long)
 
 object HistoryTable : Table() {
-    val request = jsonb("request", json::encodeToString) {
-        json.decodeFromString(Question.serializer(), it)
-    }
-    val question = varchar("question", 128)
-    val numOfAnswers = integer("numofanswers")
+    val request = jsonb("request")
+    val response = jsonb("response")
+    val time = timestamp("time")
 
-    override val primaryKey = PrimaryKey(request, question)
+    override val primaryKey = PrimaryKey(request, response, time)
 }

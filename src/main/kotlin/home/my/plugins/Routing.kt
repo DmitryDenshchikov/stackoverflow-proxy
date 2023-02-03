@@ -2,13 +2,15 @@ package home.my.plugins
 
 import home.my.client.StackOverflowClient
 import home.my.dao.HistoryDao
+import home.my.json
 import home.my.model.domain.history.History
-import home.my.model.domain.history.Question
 import home.my.model.dto.stackoverflow.QuestionsRequest
 import io.ktor.server.routing.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
+import kotlinx.serialization.json.encodeToJsonElement
+import java.time.Instant
 
 fun Application.configureRouting(historyDao: HistoryDao, stackOverflowClient: StackOverflowClient) {
 
@@ -20,10 +22,13 @@ fun Application.configureRouting(historyDao: HistoryDao, stackOverflowClient: St
                 request.pageSize, request.order, request.sort, request.tagged
             )
 
-            with(stackoverflowResponse.items.asSequence()
-                .map { History(Question(request), it.title, it.answerCount) }
-                .toList()) {
-                historyDao.insert(this)
+            with(json) {
+                val history = History(
+                    encodeToJsonElement(request),
+                    encodeToJsonElement(stackoverflowResponse),
+                    Instant.now().toEpochMilli()
+                )
+                historyDao.insert(listOf(history))
             }
 
             call.respond(stackoverflowResponse)

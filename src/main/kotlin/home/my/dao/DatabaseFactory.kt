@@ -1,6 +1,7 @@
 package home.my.dao
 
 import home.my.model.dto.database.DatabaseProperties
+import kotlinx.serialization.json.JsonElement
 import org.jetbrains.exposed.sql.*
 
 class DatabaseFactory(props: DatabaseProperties) {
@@ -8,5 +9,4 @@ class DatabaseFactory(props: DatabaseProperties) {
         Database.connect(props.jdbcUrl, props.driver, user = props.username, password = props.password)
 }
 
-fun <T : Any> Table.jsonb(name: String, toJson: (T) -> String, toObj: (String) -> T): Column<T> =
-    registerColumn(name, JsonColumnType(toJson, toObj))
+fun Table.jsonb(name: String): Column<JsonElement> = registerColumn(name, JsonColumnType())

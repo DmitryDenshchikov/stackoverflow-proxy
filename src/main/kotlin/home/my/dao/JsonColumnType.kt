@@ -1,12 +1,12 @@
 package home.my.dao
 
+import home.my.json
+import kotlinx.serialization.json.JsonElement
 import org.jetbrains.exposed.sql.ColumnType
 import org.jetbrains.exposed.sql.statements.api.PreparedStatementApi
 import org.postgresql.util.PGobject
 
-class JsonColumnType<T : Any>(
-    private val toJson: (T) -> String, private val toObj: (String) -> T
-) : ColumnType() {
+class JsonColumnType : ColumnType() {
     override fun sqlType(): String = "jsonb"
 
     override fun setParameter(stmt: PreparedStatementApi, index: Int, value: Any?) {
@@ -18,8 +18,11 @@ class JsonColumnType<T : Any>(
         })
     }
 
-    override fun valueFromDB(value: Any): T = toObj.invoke(value.toString())
+    override fun valueFromDB(value: Any): JsonElement = json.parseToJsonElement(value.toString())
 
-    @Suppress("UNCHECKED_CAST")
-    override fun notNullValueToDB(value: Any): String = toJson.invoke(value as T)
+    override fun notNullValueToDB(value: Any): String = when (value) {
+        is JsonElement -> json.encodeToString(JsonElement.serializer(), value)
+        else -> throw IllegalArgumentException("${this.javaClass} supports only ${JsonElement::class} type)")
+    }
+
 }

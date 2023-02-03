@@ -4,6 +4,7 @@ import home.my.model.domain.history.History
 import home.my.model.domain.history.HistoryTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.time.Instant
 
 class HistoryDao(override val connection: Database) : Dao<History> {
 
@@ -14,8 +15,8 @@ class HistoryDao(override val connection: Database) : Dao<History> {
             data.forEach { history ->
                 HistoryTable.insert {
                     it[request] = history.request
-                    it[question] = history.question
-                    it[numOfAnswers] = history.numOfAnswers
+                    it[response] = history.response
+                    it[time] = Instant.ofEpochMilli(history.time)
                 }
             }
         }
@@ -25,7 +26,7 @@ class HistoryDao(override val connection: Database) : Dao<History> {
         return transaction(connection) {
             HistoryTable.selectAll().asSequence().map {
                 History(
-                    it[HistoryTable.request], it[HistoryTable.question], it[HistoryTable.numOfAnswers]
+                    it[HistoryTable.request], it[HistoryTable.response], it[HistoryTable.time].toEpochMilli()
                 )
             }.toList();
         }
