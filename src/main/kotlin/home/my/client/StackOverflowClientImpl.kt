@@ -27,4 +27,15 @@ class StackOverflowClientImpl(
         }
     }.body()
 
+    override suspend fun getQuestionsByIds(
+        ids: Collection<String>
+    ): StackoverflowResponse = client.get(props.host) {
+        url {
+            path("/2.3/questions/no-answers" + ids.joinToString(separator = ";"))
+            with(parameters) {
+                append("site", props.site)
+            }
+        }
+    }.body()
+
 }
