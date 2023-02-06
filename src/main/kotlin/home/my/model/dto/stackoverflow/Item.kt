@@ -13,7 +13,6 @@ data class Item(
     val score: Int,
     @SerialName("last_activity_date") val lastActivityDate: Long,
     @SerialName("creation_date") val creationDate: Long,
-    @SerialName("last_edit_date") val lastEditDate: Long,
     @SerialName("question_id") val questionId: Int,
     @SerialName("content_license") val contentLicense: String,
     val link: String,

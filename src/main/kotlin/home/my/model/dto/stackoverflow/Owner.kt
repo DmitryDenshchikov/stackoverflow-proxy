@@ -9,7 +9,6 @@ data class Owner(
     val reputation: Int,
     @SerialName("user_id") val userId: Long,
     @SerialName("user_type") val userType: UserType,
-    @SerialName("accept_rate") val acceptRate: Int,
     @SerialName("profile_image") val profileImage: String,
     @SerialName("display_name") val displayName: String,
     val link: String

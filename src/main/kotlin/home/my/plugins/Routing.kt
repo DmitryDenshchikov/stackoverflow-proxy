@@ -11,12 +11,14 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import kotlinx.serialization.json.encodeToJsonElement
 import java.time.Instant
+import java.util.*
 
 fun Application.configureRouting(historyDao: HistoryDao, stackOverflowClient: StackOverflowClient) {
 
     routing {
         post("/questions/without-answers") {
             val request = call.receive<QuestionsRequest>()
+            val requestTime = Instant.now()
 
             val stackoverflowResponse = stackOverflowClient.getQuestionsWithNoAnswers(
                 request.pageSize, request.order, request.sort, request.tagged
@@ -24,9 +26,10 @@ fun Application.configureRouting(historyDao: HistoryDao, stackOverflowClient: St
 
             with(json) {
                 val history = History(
+                    UUID.randomUUID(),
                     encodeToJsonElement(request),
                     encodeToJsonElement(stackoverflowResponse),
-                    Instant.now().toEpochMilli()
+                    requestTime
                 )
                 historyDao.insert(listOf(history))
             }

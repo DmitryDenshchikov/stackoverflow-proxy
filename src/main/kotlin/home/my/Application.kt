@@ -46,6 +46,11 @@ fun Application.module() {
     configureRouting(historyDao, stackoverflowClient)
 }
 
+val json = Json {
+    ignoreUnknownKeys = true
+    encodeDefaults = true
+}
+
 val httpClient: HttpClient = HttpClient {
     install(Logging) {
         logger = Logger.DEFAULT
@@ -55,8 +60,6 @@ val httpClient: HttpClient = HttpClient {
         gzip()
     }
     install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
-        json()
+        json(json = json)
     }
 }
-
-val json = Json { encodeDefaults = true }
