@@ -1,13 +1,9 @@
 package home.my.model.domain.history
 
 import home.my.dao.jsonb
-import kotlinx.serialization.KSerializer
+import home.my.util.InstantSerializer
+import home.my.util.UUIDSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonElement
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.javatime.timestamp
@@ -21,26 +17,6 @@ data class History(
     val response: JsonElement,
     @Serializable(with = InstantSerializer::class) val requestTime: Instant
 )
-
-object UUIDSerializer : KSerializer<UUID> {
-    override val descriptor: SerialDescriptor
-        get() = PrimitiveSerialDescriptor("UUID", PrimitiveKind.STRING)
-
-    override fun deserialize(decoder: Decoder): UUID = UUID.fromString(decoder.decodeString())
-
-    override fun serialize(encoder: Encoder, value: UUID) = encoder.encodeString(value.toString())
-
-}
-
-object InstantSerializer : KSerializer<Instant> {
-    override val descriptor: SerialDescriptor
-        get() = PrimitiveSerialDescriptor("Instant", PrimitiveKind.LONG)
-
-    override fun deserialize(decoder: Decoder): Instant = Instant.ofEpochMilli(decoder.decodeLong())
-
-    override fun serialize(encoder: Encoder, value: Instant) = encoder.encodeLong(value.toEpochMilli())
-
-}
 
 object HistoryTable : Table() {
     val id = uuid("id")
