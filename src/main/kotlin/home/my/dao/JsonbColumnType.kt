@@ -2,11 +2,13 @@ package home.my.dao
 
 import home.my.json
 import kotlinx.serialization.json.JsonElement
+import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ColumnType
+import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.statements.api.PreparedStatementApi
 import org.postgresql.util.PGobject
 
-class JsonColumnType : ColumnType() {
+class JsonbColumnType : ColumnType() {
     override fun sqlType(): String = "jsonb"
 
     override fun setParameter(stmt: PreparedStatementApi, index: Int, value: Any?) {
@@ -26,3 +28,5 @@ class JsonColumnType : ColumnType() {
     }
 
 }
+
+fun Table.jsonb(name: String): Column<JsonElement> = registerColumn(name, JsonbColumnType())
