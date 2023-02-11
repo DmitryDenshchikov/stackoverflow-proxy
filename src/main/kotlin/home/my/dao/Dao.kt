@@ -6,6 +6,8 @@ sealed interface Dao<T> {
 
     val connection: Database
 
+    fun insert(data : T)
+
     fun insert(data : Collection<T>)
 
     fun getAll() : Collection<T>

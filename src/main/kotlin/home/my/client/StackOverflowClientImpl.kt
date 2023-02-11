@@ -31,7 +31,7 @@ class StackOverflowClientImpl(
         ids: Collection<String>
     ): StackoverflowResponse = client.get(props.host) {
         url {
-            path("/2.3/questions/no-answers" + ids.joinToString(separator = ";"))
+            path("/2.3/questions/" + ids.joinToString(separator = ";"))
             with(parameters) {
                 append("site", props.site)
             }

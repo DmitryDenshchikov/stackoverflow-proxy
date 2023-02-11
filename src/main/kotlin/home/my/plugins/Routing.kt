@@ -31,16 +31,27 @@ fun Application.configureRouting(historyDao: HistoryDao, stackOverflowClient: St
                     encodeToJsonElement(stackoverflowResponse),
                     requestTime
                 )
-                historyDao.insert(listOf(history))
+                historyDao.insert(history)
             }
 
             call.respond(stackoverflowResponse)
         }
 
         post("/questions/get-by-ids") {
-            val request = call.receive<QuestionsRequest>()
+            val request = call.receive<List<String>>()
+            val requestTime = Instant.now()
 
-            val stackoverflowResponse = stackOverflowClient.getQuestionsByIds(request.ids)
+            val stackoverflowResponse = stackOverflowClient.getQuestionsByIds(request)
+
+            with(json) {
+                val history = History(
+                    UUID.randomUUID(),
+                    encodeToJsonElement(request),
+                    encodeToJsonElement(stackoverflowResponse),
+                    requestTime
+                )
+                historyDao.insert(history)
+            }
 
             call.respond(stackoverflowResponse)
         }

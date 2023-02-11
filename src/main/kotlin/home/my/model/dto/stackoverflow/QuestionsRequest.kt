@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class QuestionsRequest(
-    val pageSize: Int, val order: Order, val sort: String, val tagged: Collection<String>, val ids: Collection<String>
+    val pageSize: Int, val order: Order, val sort: String, val tagged: Collection<String>
 )

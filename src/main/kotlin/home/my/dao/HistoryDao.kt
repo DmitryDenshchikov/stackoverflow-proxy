@@ -7,6 +7,19 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class HistoryDao(override val connection: Database) : Dao<History> {
 
+    override fun insert(data: History) {
+        transaction(connection) {
+            addLogger(StdOutSqlLogger)
+
+            HistoryTable.insert {
+                it[id] = data.id
+                it[request] = data.request
+                it[response] = data.response
+                it[requestTime] = data.requestTime
+            }
+        }
+    }
+
     override fun insert(data: Collection<History>) {
         transaction(connection) {
             addLogger(StdOutSqlLogger)
