@@ -1,12 +1,10 @@
 package home.my.model.dto.stackoverflow
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
-@Serializable
 data class StackoverflowResponse(
     val items: Collection<Item>,
-    @SerialName("has_more") val hasMore: Boolean,
-    @SerialName("quota_max") val quotaMax: Int,
-    @SerialName("quota_remaining") val quotaRemaining: Int
+    @SerializedName("has_more") val hasMore: Boolean,
+    @SerializedName("quota_max") val quotaMax: Int,
+    @SerializedName("quota_remaining") val quotaRemaining: Int
 )
