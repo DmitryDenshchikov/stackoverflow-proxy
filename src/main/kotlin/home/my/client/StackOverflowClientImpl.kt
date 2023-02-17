@@ -13,12 +13,12 @@ class StackOverflowClientImpl(
 ) : StackOverflowClient {
 
     override suspend fun getQuestionsWithNoAnswers(
-        pageSize: Int, order: Order, sort: String, tagged: Collection<String>
+        quantity: Int, order: Order, sort: String, tagged: Collection<String>
     ): StackoverflowResponse = client.get(props.host) {
         url {
             path("/2.3/questions/no-answers")
             with(parameters) {
-                append("pagesize", pageSize.toString())
+                append("pagesize", quantity.toString())
                 append("order", order.name)
                 append("sort", sort)
                 append("tagged", tagged.joinToString(separator = ";"))

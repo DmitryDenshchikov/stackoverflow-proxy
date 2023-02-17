@@ -19,7 +19,7 @@ fun Application.configureRouting(historyDao: HistoryDao, stackOverflowClient: St
             val requestTime = Instant.now()
 
             val stackoverflowResponse = stackOverflowClient.getQuestionsWithNoAnswers(
-                request.pageSize, request.order, request.sort, request.tagged
+                request.quantity, request.order, request.sort, request.tagged
             )
 
             val history = History(request, stackoverflowResponse, requestTime) {
