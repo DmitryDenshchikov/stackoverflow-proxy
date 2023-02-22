@@ -18,9 +18,8 @@ fun Application.configureRouting(historyDao: HistoryDao, stackOverflowClient: St
             val request = call.receive<QuestionsRequest>()
             val requestTime = Instant.now()
 
-            val stackoverflowResponse = stackOverflowClient.getQuestionsWithNoAnswers(
-                request.quantity, request.order, request.sort, request.tagged
-            )
+            val stackoverflowResponse =
+                with(request) { stackOverflowClient.getQuestionsWithNoAnswers(quantity, order, sort, tagged) }
 
             val history = History(request, stackoverflowResponse, requestTime) {
                 gson.toJsonTree(this)
