@@ -1,7 +1,7 @@
 package home.my.dao
 
-import home.my.json
-import kotlinx.serialization.json.JsonElement
+import com.google.gson.JsonElement
+import home.my.gson
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ColumnType
 import org.jetbrains.exposed.sql.Table
@@ -20,12 +20,9 @@ class JsonbColumnType : ColumnType() {
         })
     }
 
-    override fun valueFromDB(value: Any): JsonElement = json.parseToJsonElement(value.toString())
+    override fun valueFromDB(value: Any): JsonElement = gson.toJsonTree(value)
 
-    override fun notNullValueToDB(value: Any): String = when (value) {
-        is JsonElement -> json.encodeToString(JsonElement.serializer(), value)
-        else -> throw IllegalArgumentException("${this.javaClass} supports only ${JsonElement::class} type)")
-    }
+    override fun notNullValueToDB(value: Any): String = gson.toJson(value)
 
 }
 

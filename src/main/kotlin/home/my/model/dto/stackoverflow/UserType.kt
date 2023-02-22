@@ -1,24 +1,22 @@
 package home.my.model.dto.stackoverflow
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
-@Serializable
 enum class UserType {
 
-    @SerialName("unregistered")
+    @SerializedName("unregistered")
     UNREGISTERED,
 
-    @SerialName("registered")
+    @SerializedName("registered")
     REGISTERED,
 
-    @SerialName("moderator")
+    @SerializedName("moderator")
     MODERATOR,
 
-    @SerialName("team_admin")
+    @SerializedName("team_admin")
     TEAM_ADMIN,
 
-    @SerialName("does_not_exist")
+    @SerializedName("does_not_exist")
     DOES_NOT_EXIST;
 
 }

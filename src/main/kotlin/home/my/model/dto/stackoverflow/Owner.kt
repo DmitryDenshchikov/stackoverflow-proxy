@@ -1,15 +1,13 @@
 package home.my.model.dto.stackoverflow
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
-@Serializable
 data class Owner(
-    @SerialName("account_id") val accountId: Int,
+    @SerializedName("account_id") val accountId: Int,
     val reputation: Int,
-    @SerialName("user_id") val userId: Long,
-    @SerialName("user_type") val userType: UserType,
-    @SerialName("profile_image") val profileImage: String,
-    @SerialName("display_name") val displayName: String,
+    @SerializedName("user_id") val userId: Long,
+    @SerializedName("user_type") val userType: UserType,
+    @SerializedName("profile_image") val profileImage: String,
+    @SerializedName("display_name") val displayName: String,
     val link: String
 )

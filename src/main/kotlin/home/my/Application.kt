@@ -1,5 +1,6 @@
 package home.my
 
+import com.google.gson.Gson
 import home.my.client.StackOverflowClientImpl
 import home.my.dao.DatabaseFactory
 import home.my.dao.HistoryDao
@@ -11,9 +12,8 @@ import home.my.plugins.*
 import io.ktor.client.*
 import io.ktor.client.plugins.compression.*
 import io.ktor.client.plugins.logging.*
-import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.plugins.contentnegotiation.*
-import kotlinx.serialization.json.Json
+import io.ktor.serialization.gson.*
 
 fun main(args: Array<String>): Unit = EngineMain.main(args)
 
@@ -30,8 +30,7 @@ fun Application.module() {
 
     val stackOverflowProperties = with(environment.config) {
         StackOverflowProperties(
-            property("stack_overflow.host").getString(),
-            property("stack_overflow.site").getString()
+            property("stack_overflow.host").getString(), property("stack_overflow.site").getString()
         )
     }
 
@@ -40,16 +39,14 @@ fun Application.module() {
     val stackoverflowClient = StackOverflowClientImpl(stackOverflowProperties, httpClient)
 
     install(ContentNegotiation) {
-        json()
+        gson()
     }
 
     configureRouting(historyDao, stackoverflowClient)
 }
 
-val json = Json {
-    ignoreUnknownKeys = true
-    encodeDefaults = true
-}
+
+val gson = Gson()
 
 val httpClient: HttpClient = HttpClient {
     install(Logging) {
@@ -60,6 +57,6 @@ val httpClient: HttpClient = HttpClient {
         gzip()
     }
     install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
-        json(json = json)
+        gson()
     }
 }

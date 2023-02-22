@@ -1,20 +1,19 @@
 package home.my.model.dto.stackoverflow
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
-@Serializable
+
 data class Item(
     val tags: Collection<String>,
     val owner: Owner,
-    @SerialName("is_answered") val isAnswered: Boolean,
-    @SerialName("view_count") val viewCount: Int,
-    @SerialName("answer_count")  val answerCount: Int,
+    @SerializedName("is_answered") val isAnswered: Boolean,
+    @SerializedName("view_count") val viewCount: Int,
+    @SerializedName("answer_count")  val answerCount: Int,
     val score: Int,
-    @SerialName("last_activity_date") val lastActivityDate: Long,
-    @SerialName("creation_date") val creationDate: Long,
-    @SerialName("question_id") val questionId: Int,
-    @SerialName("content_license") val contentLicense: String,
+    @SerializedName("last_activity_date") val lastActivityDate: Long,
+    @SerializedName("creation_date") val creationDate: Long,
+    @SerializedName("question_id") val questionId: Int,
+    @SerializedName("content_license") val contentLicense: String,
     val link: String,
     val title: String
 )
